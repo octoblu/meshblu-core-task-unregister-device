@@ -1,7 +1,16 @@
 language: node_js
 node_js:
 - '5'
+services:
+- mongodb
+env:
+- CXX=g++-4.8
 addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
   code_climate:
     repo_token: "31edc1e9fa597d2fa6bc3487138af968c4a9de4ea66ea2af300702156e335295"
 before_script:

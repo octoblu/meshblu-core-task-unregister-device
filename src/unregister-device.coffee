@@ -1,8 +1,10 @@
-_    = require 'lodash'
-http = require 'http'
+_             = require 'lodash'
+http          = require 'http'
+DeviceManager = require 'meshblu-core-manager-device'
 
 class UnregisterDevice
-  constructor: (options={}) ->
+  constructor: ({@cache,@uuidAliasResolver,@datastore}) ->
+    @deviceManager = new DeviceManager {@cache,@uuidAliasResolver,@datastore}
 
   _doCallback: (request, code, callback) =>
     response =
@@ -13,9 +15,11 @@ class UnregisterDevice
     callback null, response
 
   do: (request, callback) =>
-    {uuid, messageType, options} = request.metadata
-    message = JSON.parse request.rawData
+    {toUuid} = request.metadata
 
-    return @_doCallback request, 204, callback
+    return @_doCallback request, 422, callback unless toUuid?
+    @deviceManager.remove {uuid: toUuid}, (error) =>
+      return callback error if error?
+      return @_doCallback request, 204, callback
 
 module.exports = UnregisterDevice
