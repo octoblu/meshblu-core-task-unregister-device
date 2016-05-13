@@ -8,11 +8,12 @@ UnregisterDevice = require '../'
 
 describe 'UnregisterDevice', ->
   beforeEach (done) ->
+    database = mongojs 'unregister-device-test', ['devices']
     @datastore = new Datastore
-      database: mongojs 'unregister-device-test'
-      collection: 'unregister-devices'
+      database: database
+      collection: 'devices'
 
-    @datastore.remove done
+    database.devices.remove done
 
     @cache = new Cache client: redis.createClient uuid.v1()
 
