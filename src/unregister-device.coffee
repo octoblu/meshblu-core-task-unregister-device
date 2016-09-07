@@ -29,7 +29,7 @@ class UnregisterDevice
       @_createJob {messageType: 'unregister', jobType: 'DeliverUnregisterSent', fromUuid: toUuid, message, auth: newAuth}, (error) =>
         return callback error if error?
 
-        @deviceManager.remove {uuid: toUuid}, (error) =>
+        @deviceManager.recycle {uuid: toUuid}, (error) =>
           return callback error if error?
           return @_doCallback request, 204, callback
 
